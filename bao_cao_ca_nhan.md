@@ -8,232 +8,106 @@
 
 ---
 
-## 1. Lý do chọn đề tài
+## 1. Tìm hiểu lý do chọn đề tài
 
-### 1.1. Bối cảnh thị trường
+### Điều thấy khó / phức tạp
 
-| Chỉ số | Giá trị |
-|---|---|
-| Doanh thu du lịch trực tuyến toàn cầu (2023) | ~750 tỷ USD |
-| Tốc độ tăng trưởng CAGR (2023–2028) | 9,0%/năm |
-| Lượt khách quốc tế đến Việt Nam (2024) | 18 triệu |
-| Doanh nghiệp lữ hành có giấy phép tại VN | ~3.800 doanh nghiệp |
-| Tỷ lệ đặt tour trực tuyến (2024) | ~42% |
+Khi bắt đầu, nhóm chỉ có ý tưởng chung là làm hệ thống du lịch. Phần khó là phải **chứng minh được đề tài này thực sự cần thiết** – không phải chỉ nói "thị trường du lịch lớn" mà phải chỉ ra được khoảng trống mà các giải pháp hiện tại chưa lấp đầy.
 
-### 1.2. Pain Points của doanh nghiệp lữ hành SME
+Tôi phải tìm hiểu và so sánh:
+- **Traveloka/iVIVU** – hướng đến khách lẻ (B2C), không hỗ trợ doanh nghiệp quản lý nội bộ
+- **Sabre/Amadeus** – dành cho hãng hàng không quốc tế, phí license cao, không phù hợp SME Việt Nam
+- **Excel/Zalo** – thực tế >80% doanh nghiệp lữ hành SME đang dùng, gây ra hàng loạt vấn đề: đặt trùng chỗ, mất dữ liệu, vi phạm pháp lý
 
-Hơn **80% doanh nghiệp lữ hành Việt Nam là SME** đang gặp phải:
+### Ý tưởng mới nhận ra
 
-- **Quản lý thủ công bằng Excel/Zalo:** Dữ liệu phân tán, dễ mất, sai sót khi đặt chỗ
-- **Không kiểm soát kho chỗ real-time:** Overbooking hoặc bỏ lỡ cơ hội bán
-- **Điều phối HDV/Xe thủ công:** Trùng lịch, thiếu nhân sự ngày cao điểm
-- **Không có báo cáo kinh doanh:** Quyết định dựa trên cảm tính
-- **Bảo mật kém:** Lưu trữ Passport/CCCD không mã hóa – **vi phạm Nghị định 13/2023**
-
-### 1.3. Khoảng trống thị trường
-
-| Tiêu chí | Traveloka/iVIVU | Sabre/Amadeus | **Giải pháp nhóm** |
-|---|---|---|---|
-| Mô hình | B2C | B2B quốc tế | **B2B – SME Việt Nam** |
-| Chi phí | Hoa hồng 15–25% | Phí license cao | **Phù hợp SME** |
-| Quản lý tour tùy chỉnh | Không | Phức tạp | **Có – toàn diện** |
-| Tuân thủ pháp lý VN | Một phần | Chỉ chuẩn quốc tế | **Cao – NĐ 168/2017, 13/2023** |
-| Multi-tenancy | Không | Có | **Có – cô lập theo OrgID** |
-
-> **Kết luận:** Thị trường VN chưa có giải pháp đồng thời: **(1) Quản lý toàn bộ vòng đời tour, (2) Chi phí phù hợp SME, (3) Tuân thủ đầy đủ pháp lý Việt Nam.**
+Thị trường Việt Nam đang thiếu một giải pháp **đồng thời** đáp ứng 3 yếu tố: quản lý toàn bộ vòng đời tour + chi phí phù hợp SME + tuân thủ pháp lý Việt Nam. Đây là lý do chính để nhóm đề xuất hệ thống B2B SaaS dành riêng cho doanh nghiệp lữ hành nội địa.
 
 ---
 
-## 2. Văn bản pháp lý liên quan
+## 2. Tìm kiếm văn bản pháp lý liên quan
 
-### 2.1. Danh mục văn bản đã tra cứu
+### Điều thấy khó / phức tạp
 
-| Văn bản | Nội dung liên quan | Ánh xạ vào hệ thống |
-|---|---|---|
-| Luật Du lịch 2017 | Kinh doanh lữ hành, hợp đồng, HDV | UC03, UC07, UC08 |
-| Nghị định 85/2021/NĐ-CP | Đặt cọc tối thiểu 30%; chính sách hoàn/hủy | CBR-03 đến CBR-08, CBR-17 |
-| Nghị định 13/2023/NĐ-CP | Bảo vệ dữ liệu cá nhân, AES-256, lưu 5 năm, Audit Log | CBR-11, CBR-15, CBR-19 |
-| Luật Bảo vệ NTD 2023 | Khóa giá cố định trong quá trình thanh toán | CBR-25 (Price Lock 15 phút) |
-| Luật Giá 2023 | Giới hạn biên độ giá động | CBR-26 (50%–150% giá gốc) |
-| Quy định NHNN | Quy trình phê duyệt BNPL, hoàn tiền qua provider | CBR-21 |
+Đây là phần **tốn nhiều công nhất**. Ban đầu tôi nghĩ chỉ cần tra Luật Du lịch là đủ, nhưng thực tế hệ thống liên quan đến nhiều lĩnh vực pháp lý khác nhau mà phải tìm từng cái:
 
-### 2.2. Ánh xạ pháp lý vào Business Rules – Điểm phức tạp
+| Văn bản | Lý do liên quan (phát hiện trong quá trình làm) |
+|---|---|
+| Luật Du lịch 2017 | Quy định về kinh doanh lữ hành, hợp đồng tour, hướng dẫn viên |
+| Nghị định 85/2021/NĐ-CP | Phát hiện khi thiết kế tính năng đặt cọc & hủy tour – có quy định cụ thể về mức phạt |
+| Nghị định 13/2023/NĐ-CP | Phát hiện khi nhóm bàn về lưu trữ Passport/CCCD – phải mã hóa AES-256, lưu 5 năm |
+| Luật Bảo vệ NTD 2023 | Phát hiện khi thiết kế Dynamic Pricing – giá phải khóa cố định trong checkout |
+| Luật Giá 2023 | Bổ sung sau – giới hạn biên độ giá động 50%–150% |
+| Quy định NHNN | Phát hiện khi tích hợp BNPL – hoàn tiền phải qua provider, không trả tiền mặt |
 
-Thách thức là **dịch ngôn ngữ pháp lý thành logic hệ thống**:
+**Phần khó nhất không phải là tìm luật, mà là dịch ngôn ngữ pháp lý thành logic hệ thống.** Ví dụ, Nghị định 85/2021 viết:
 
-**Nghị định 85/2021 → Chính sách đặt cọc & hủy tour:**
+> *"Hủy trước 15 ngày: hoàn 100%; Hủy 8–14 ngày: phạt 30%; Hủy 3–7 ngày: phạt 50%; Hủy dưới 3 ngày hoặc No-show: phạt 100%"*
 
-| ID | Rule | Cơ sở |
-|---|---|---|
-| CBR-03 | Đặt cọc tối thiểu 30% khi xác nhận booking | NĐ 85/2021, Điều 14 |
-| CBR-05 | Hủy ≥ 15 ngày: hoàn 100% | NĐ 85/2021 |
-| CBR-06 | Hủy 8–14 ngày: phạt 30% | NĐ 85/2021 |
-| CBR-07 | Hủy 3–7 ngày: phạt 50% | NĐ 85/2021 |
-| CBR-08 | Hủy < 3 ngày / No-show: mất 100% | NĐ 85/2021 |
+→ Phải tách thành 5 Business Rules riêng (CBR-03 đến CBR-08), xác định rõ: tính từ ngày nào, phạt trên tổng đơn hay đặt cọc, cần cấu hình linh hoạt theo từng doanh nghiệp hay cố định.
 
-**Nghị định 13/2023 → Bảo vệ dữ liệu cá nhân:**
-- **CBR-11:** Passport/CCCD mã hóa **AES-256**; hiển thị dạng `P****123` với vai trò thấp
-- **CBR-15:** Lưu trữ thông tin cá nhân **tối thiểu 5 năm**
-- **CBR-19:** **Audit Log** mọi thao tác nhạy cảm (tài khoản + IP + thời gian), lưu **≥ 12 tháng**
+### Điều rút ra
+
+Cần đọc luật **từ góc độ lập trình viên**: mỗi điều khoản là một điều kiện `if-else`, mỗi mức phạt là một con số cần lưu vào database. Nếu chỉ đọc lướt qua thì rất dễ bỏ sót các trường hợp biên (edge case).
 
 ---
 
 ## 3. Yêu cầu phi chức năng (NFR)
 
-### 3.1. Bảo mật
+### Điều thấy khó / phức tạp
 
-| Yêu cầu | Chỉ số / Tiêu chuẩn |
-|---|---|
-| Kết nối | HTTPS/TLS 1.2+ bắt buộc |
-| Xác thực API | API Key + HMAC-SHA256 |
-| Chống tấn công | OWASP Top 10: SQL Injection, XSS, CSRF + Rate Limiting |
-| Brute-force | 5 lần thất bại → khóa 15 phút |
-| Mã hóa DB | AES-256 cho Passport/CCCD, hồ sơ BNPL, ảnh eKYC |
-| Audit Log | Lưu ≥ 12 tháng – tuân thủ NĐ 13/2023 |
+NFR dễ bị viết chung chung kiểu *"hệ thống phải nhanh, phải bảo mật"* mà không có con số cụ thể. Phần khó là phải **lượng hóa từng yêu cầu** và giải thích tại sao chọn ngưỡng đó.
 
-### 3.2. Hiệu năng & Khả năng mở rộng
+**Ví dụ 1 – Dynamic Pricing latency:**  
+Ban đầu chỉ ghi "tính giá phải nhanh". Sau khi phân tích luồng người dùng (nhấn xem giá → chờ → chọn mua), nếu tính giá > 1 giây thì người dùng sẽ thoát ra. Từ đó xác định ngưỡng **< 500ms/request** là hợp lý và yêu cầu kỹ thuật: Redis Cache + Active Eviction (không dùng TTL thụ động).
 
-| Yêu cầu | Chỉ số |
-|---|---|
-| Response time API | < 2 giây (thường), ≤ 5 giây (thanh toán) |
-| Throughput | 500 request đồng thời/giây |
-| Người dùng đồng thời | 200 tổ chức + 10.000 end-users |
-| Dynamic Pricing latency | **< 500ms/request** |
-| Cache eviction giá động | **< 1 giây** sau giao dịch xác nhận |
+**Ví dụ 2 – Bảo mật dữ liệu:**  
+Không chỉ ghi "mã hóa dữ liệu" mà phải chỉ rõ: mã hóa **AES-256 tại tầng database**, chỉ Operator/Manager mới xem được, các vai trò khác thấy dạng `P****123`. Điều này xuất phát trực tiếp từ Nghị định 13/2023.
 
-### 3.3. Khả dụng & Khả năng bảo trì
+**Ví dụ 3 – Uptime 99,9%:**  
+Phải hiểu con số này nghĩa là gì: tương đương ≤ 8,7 giờ downtime/năm. Từ đó mới xác định được cần Failover tự động < 30 giây, RTO ≤ 4 giờ, RPO ≤ 1 giờ.
 
-| Yêu cầu | Chỉ số |
-|---|---|
-| Uptime | ≥ 99,9% (≤ 8,7 giờ downtime/năm) |
-| Failover | Tự động < 30 giây |
-| RTO / RPO | ≤ 4 giờ / ≤ 1 giờ |
-| Unit test coverage | ≥ 70% module cốt lõi |
-| API docs | Swagger/OpenAPI 3.0 đầy đủ |
+### Ý tưởng mới nhận ra
 
-### 3.4. Ràng buộc thiết kế
-
-- **Kiến trúc:** 3-tier (Client – API Server – Database)
-- **Backend:** Java Spring Boot + Node.js/Go cho dịch vụ tải cao
-- **Database:** PostgreSQL/MySQL + Redis Cluster + Elasticsearch
-- **Message Queue:** Apache Kafka hoặc RabbitMQ
-- **Deploy:** Docker + Kubernetes; Cloud-agnostic (AWS/GCP/Azure)
+NFR không phải viết một lần rồi thôi – trong quá trình thiết kế các Use Case, phát hiện thêm nhiều ràng buộc mới. Ví dụ, đến khi thiết kế BNPL mới thấy cần bổ sung NFR về **BNPL loan status UX** (progress bar từng bước) và **dynamic price transparency** (banner giải thích khi giá thay đổi).
 
 ---
 
 ## 4. Tích hợp và Dịch chuyển Dữ liệu
 
-### 4.1. Cổng thanh toán (VNPay & MoMo)
+### Điều thấy khó / phức tạp
 
-```
-Khách xác nhận → Tạo Payment Request (unique order code)
-→ Redirect sang cổng thanh toán (khách KHÔNG nhập thẻ trên hệ thống)
-→ [Thành công] Cổng gửi IPN Webhook → Xác minh HMAC-SHA256
-→ Cập nhật "Đã thanh toán" + Hard-Lock slot + Phát E-Voucher
-→ [Thất bại/Timeout] Hủy phiên, hoàn chỗ về kho
-```
+**4.1. Tích hợp cổng thanh toán (VNPay/MoMo)**
 
-### 4.2. BNPL (Fundiin, Kredivo) + eKYC
+Phần khó không phải là gọi API, mà là xử lý **IPN Webhook**:
+- Sau khi khách thanh toán, cổng thanh toán gọi ngược lại về hệ thống qua IPN
+- Phải **xác minh chữ ký HMAC-SHA256** trước khi cập nhật trạng thái – nếu không, kẻ xấu có thể giả mạo webhook để lấy tour mà không trả tiền
+- Phải xử lý trường hợp IPN đến **nhiều lần** (idempotent): không được cộng tiền hay trừ slot 2 lần
 
-```
-Khách chọn BNPL → Gửi API + HMAC-SHA256 đến Provider (kèm eKYC: OCR CCCD + nhận diện khuôn mặt)
-→ Credit Scoring real-time tại Provider
-→ [Duyệt] IPN Webhook → Đánh dấu "Paid-BNPL" + Tạo hợp đồng tín dụng + E-Voucher
-→ [Hủy] Hoàn qua cancellation API Provider (KHÔNG hoàn tiền mặt – CBR-21)
-```
+**4.2. Tích hợp BNPL + eKYC**
 
-### 4.3. Dynamic Pricing Engine (DPE)
+Phát hiện một ràng buộc pháp lý khó: khi khách hủy đơn BNPL, **không được hoàn tiền mặt trực tiếp cho khách** mà phải hoàn qua cancellation API của provider – vì khoản tiền đó thực chất là khoản vay (CBR-21 – quy định NHNN). Điều này làm thay đổi toàn bộ luồng hoàn tiền so với thanh toán thông thường.
 
-**Công thức:** `Giá = (Nhu cầu × 0,5) + (Lấp đầy × 0,3) + (Biên lợi nhuận × 0,2)`
+**4.3. Data Migration từ Excel sang hệ thống**
 
-- Tính giá < 500ms → Cache Redis 15 phút → Khóa giá cho phiên checkout
-- Khi giao dịch xác nhận → Active eviction cache trong < 1 giây
-- Biên độ 50%–150% giá gốc (CBR-26 – Luật Giá 2023)
+Bài toán tưởng đơn giản nhưng thực tế có nhiều edge case:
+- Dữ liệu Excel của mỗi doanh nghiệp có format khác nhau → phải cung cấp template chuẩn
+- Không thể import tất cả rồi báo lỗi sau → phải **validate từng dòng trước khi ghi vào DB**
+- Import lại cùng file không được tạo bản ghi trùng → cần **idempotent import**
 
-### 4.4. Data Migration (Excel → Hệ thống)
+### Ý tưởng mới nhận ra
 
-1. Cung cấp Excel Template chuẩn → Doanh nghiệp điền & upload
-2. Validate từng dòng (định dạng, trường bắt buộc) → Báo lỗi chi tiết
-3. Chỉ import dòng hợp lệ; rollback nếu lỗi hệ thống
-4. **Idempotent import** – import lại không tạo bản ghi trùng
-
----
-
-## 5. Phần khó – Phức tạp – Ý tưởng mới
-
-### 5.1. ⚡ Xử lý Race Condition trong đặt chỗ
-
-**Bài toán:** Flash sale / nhiều người cùng đặt chỗ cuối → Overbooking.
-
-**Giải pháp 3 tầng:**
-
-| Tầng | Kỹ thuật | Mục đích |
-|---|---|---|
-| 1 – API Gateway | Token Bucket → Virtual Queue (Redis/RabbitMQ) | Lọc tải, hiển thị vị trí hàng chờ |
-| 2 – Redis Lua Script | Atomic Decrement (Soft-Lock 15 phút) | Loại bỏ Race Condition hoàn toàn |
-| 3 – Kafka Delayed Message | Auto-release sau 15 phút không thanh toán | Hoàn chỗ về kho tự động |
-
-> Lua Script đảm bảo **nguyên tử** – kiểm tra & giảm chỗ trong 1 bước, không thể bị interrupt (kỹ thuật dùng bởi Ticketmaster, Booking.com).
-
-### 5.2. 🧩 Saga Pattern – Giao dịch phân tán Microservices
-
-**Bài toán:** Booking qua nhiều service độc lập; nếu 1 bước thất bại cần rollback nhất quán.
-
-**Ví dụ thất bại:** Inventory ✅ → Pricing ✅ → Payment ✅ → Loyalty ❌
-
-**Giải pháp Saga Orchestrator:**
-- Phát hiện bước thất bại → Kích hoạt **Compensating Transactions** tự động
-- Hoàn tiền → Nhả chỗ → Đảm bảo không "mất tiền mà không có chỗ"
-
-> Không dùng ACID 2-Phase Commit vì quá chậm và có điểm thất bại đơn trong Microservices.
-
-### 5.3. 🏨 Thuật toán Tetris xếp phòng (Bin Packing)
-
-**Bài toán (NP-Hard):** Lịch đặt phòng phân mảnh → khoảng trống nhỏ lẻ không bán được.
-
-**Giải pháp:** Cron Job chạy hàng đêm, gom đặt phòng vào số phòng vật lý ít nhất, tạo khoảng trống dài liên tục → bán được cho khách Group Booking dài ngày.
-
-### 5.4. 💳 Credit Scoring tự động cho BNPL
-
-```
-Input: Lịch sử giao dịch + eKYC (OCR + Face Matching) + Hành vi tiêu dùng
-→ ML Model: XGBoost / LightGBM
-→ Output: Credit Score → Hạn mức tín dụng (VD: 10 triệu VNĐ)
-→ Cấp hạn mức real-time, không cần duyệt thủ công
-```
-
-Trạng thái: `Inactive → Under Review → Active/Rejected → Suspended/Blocked`
-
-### 5.5. 📊 Dynamic Pricing Engine – Cân bằng 3 yêu cầu mâu thuẫn
-
-| Yêu cầu | Ràng buộc |
-|---|---|
-| Giá thay đổi theo thị trường | < 500ms/lần tính |
-| Minh bạch với khách | Khóa giá 15 phút khi checkout (CBR-25) |
-| Giá không vô lý | Biên độ 50%–150% giá gốc (CBR-26) |
-
-**Giải pháp:** LSTM + Rule-based → Redis Cache (TTL 15 phút) → Active eviction khi giao dịch xác nhận
-
-### 5.6. 🔐 Multi-tenancy với Data Isolation hoàn toàn
-
-- Mọi bảng có cột `OrgID` làm **tenant discriminator**; Index đầy đủ trên `OrgID`
-- `TourCode` unique **trong phạm vi OrgID** (CBR-13) – hai doanh nghiệp có thể trùng mã, không xung đột
+Khi thiết kế tích hợp Dynamic Pricing, nhận ra phải giải quyết **3 yêu cầu mâu thuẫn cùng lúc**: giá thay đổi liên tục theo thị trường (< 500ms) + minh bạch với khách (khóa giá 15 phút khi checkout) + không vô lý (biên độ 50%–150% theo Luật Giá 2023). Giải pháp là dùng Redis Cache với Active Eviction thay vì TTL thụ động.
 
 ---
 
 ## Tổng kết
 
-| Phần công việc | Mức độ khó | Điểm nổi bật |
+| Nhiệm vụ | Điều thấy khó nhất | Bài học rút ra |
 |---|---|---|
-| Ánh xạ pháp lý vào Business Rules | ⭐⭐⭐⭐⭐ | 26 CBR tuân thủ 6 văn bản pháp luật |
-| Race Condition – Redis Lua + Kafka | ⭐⭐⭐⭐⭐ | Token Bucket + Atomic Lua + Delayed Release |
-| Saga Pattern Microservices | ⭐⭐⭐⭐ | Compensating Transaction tự động |
-| Dynamic Pricing + Cache Eviction | ⭐⭐⭐⭐ | Real-time pricing + price lock checkout |
-| BNPL + eKYC + Credit Scoring ML | ⭐⭐⭐⭐ | Duyệt hạn mức real-time |
-| Tetris xếp phòng (Bin Packing) | ⭐⭐⭐ | Tối ưu khoảng trống lịch trình |
-| NFR – Performance + Security | ⭐⭐⭐⭐ | 99,9% uptime, <500ms DPE, AES-256 |
-| Data Migration từ Excel | ⭐⭐⭐ | Validate trước import, idempotent |
-
----
-
-*Tài liệu tổng hợp từ: `design_analysis.txt`, `bao_cao_phan_tich_nhom.md`, `market_analysis.txt`*
+| Lý do chọn đề tài | Chứng minh khoảng trống thị trường có thực | Cần so sánh cụ thể với giải pháp hiện có |
+| Tìm văn bản pháp lý | Dịch điều khoản luật thành Business Rules | Đọc luật từ góc độ logic lập trình |
+| Yêu cầu phi chức năng | Lượng hóa từng yêu cầu bằng con số cụ thể | NFR phải cập nhật liên tục khi thiết kế UC |
+| Tích hợp thanh toán | Xử lý IPN Webhook idempotent + xác minh chữ ký | Bảo mật luồng callback quan trọng hơn luồng chính |
+| Tích hợp BNPL | Ràng buộc hoàn tiền qua provider (CBR-21) | Pháp lý ảnh hưởng trực tiếp đến thiết kế kỹ thuật |
+| Data Migration | Validate trước import, idempotent | Không bao giờ để dữ liệu bẩn vào database |
